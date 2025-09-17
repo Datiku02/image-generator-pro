@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Image Generator PRO - Ready</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root{ --bg:#0f0f10; --card:#141416; --muted:#bfc3c7; --accent:#28a745; }
+  body{ margin:0; font-family:Inter,system-ui,Segoe UI,Arial; background:linear-gradient(180deg,#070708 0%, #0f0f10 100%); color:#eee; padding:18px; -webkit-font-smoothing:antialiased; }
+  .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:18px;}
+  header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  h1{font-size:20px;margin:0}
+  .panel{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+  select,input[type="text"],textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:#0b0b0c;color:#eee;font-size:13px}
+  .section{margin-bottom:12px}
+  .row{display:flex;gap:10px}
+  .row > *{flex:1}
+  .checkboxes{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+  .checkboxes label{font-size:13px;color:#ddd}
+  button{background:var(--accent);border:none;color:white;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+  .previewCard{padding:14px;border-radius:10px;background:linear-gradient(180deg,#0f1112,#121416);min-height:160px;white-space:pre-wrap;font-size:13px;line-height:1.4;color:#e6eef6;overflow:auto}
+  .presetsList{max-height:160px;overflow:auto;margin-top:8px}
+  .presetItem{display:flex;align-items:center;justify-content:space-between;padding:6px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:6px;font-size:13px}
+  .smallBtn{background:#2b2b2b;padding:6px 8px;border-radius:8px;color:#ddd;border:0;cursor:pointer}
+  footer{grid-column:1/-1;margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+  @media(max-width:980px){.wrap{grid-template-columns:1fr;}}
+  .imgPreview{max-width:100%;border-radius:8px;margin-top:8px;border:1px solid rgba(255,255,255,0.04)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Image Generator PRO - Ready</h1>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="randomBtn">🎲 Randomize</button>
+        <button id="copyBtn">📋 Copy Prompt</button>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="section">
+        <label>Genre</label>
+        <select id="genre">
+          <option value="">-- none --</option>
+          <option>Photorealistic</option>
+          <option>Anime</option>
+          <option>Fantasy</option>
+          <option>Cartoon</option>
+          <option>Cyberpunk</option>
+          <option>Noir</option>
+        </select>
+      </div>
+
+      <div class="section row">
+        <div>
+          <label>Character Style</label>
+          <select id="style">
+            <option value="">-- none --</option>
+            <option>Hyper Realistic</option>
+            <option>Disney Pixar</option>
+            <option>DreamWorks</option>
+            <option>Studio Ghibli</option>
+            <option>Lego Style</option>
+            <option>Realistic 3D</option>
+            <option>Cyberpunk 3D</option>
+          </select>
+        </div>
+        <div>
+          <label>Style Preset / Look</label>
+          <select id="preset">
+            <option value="">-- none --</option>
+            <option>Photorealism → extreme, ultra-sharp, award-winning</option>
+            <option>Editorial / Magazine → Vogue, W Magazine, Harper’s Bazaar</option>
+            <option>Cinematic Tones → Netflix, Hollywood, Korean Drama, K-Pop</option>
+            <option>Sports / ESPN → action freeze, crisp clarity</option>
+            <option>Documentary → National Geographic, Steve McCurry style</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section row">
+        <div>
+          <label>Gender</label>
+          <select id="gender">
+            <option value="">-- none --</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Non-binary</option>
+          </select>
+        </div>
+        <div>
+          <label>Age</label>
+          <select id="age">
+            <option value="">-- none --</option>
+            <option>Child</option>
+            <option>Teenager</option>
+            <option>Adult</option>
+            <option>Elder</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <label>Kostum / Pakaian (primary)</label>
+        <select id="kostum">
+          <option value="">-- none --</option>
+          <option>Casual Outfit</option>
+          <option>Hoodie</option>
+          <option>Formal Suit</option>
+          <option>Armor</option>
+          <option>Traditional Clothes</option>
+          <option>Sportswear</option>
+          <option>Hijab Outfit</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <label>Background / Setting</label>
+        <select id="background">
+          <option value="">-- none --</option>
+          <optgroup label="Tempat Sehari-hari">
+            <option>Pasar rakyat</option>
+            <option>Supermarket</option>
+            <option>Cafe</option>
+            <option>Restaurant</option>
+            <option>School</option>
+            <option>Office</option>
+            <option>Market (indoor)</option>
+            <option>Food stall street</option>
+          </optgroup>
+          <optgroup label="Kota">
+            <option>Busy street in downtown</option>
+            <option>Skyscraper city</option>
+            <option>Train station</option>
+            <option>Airport terminal</option>
+            <option>Alley with neon signs</option>
+          </optgroup>
+          <optgroup label="Alam">
+            <option>Flower garden</option>
+            <option>Riverside</option>
+            <option>Beach</option>
+            <option>Forest</option>
+            <option>Mountains</option>
+            <option>Rice fields</option>
+          </optgroup>
+          <optgroup label="Fantasi / Sci-Fi">
+            <option>Outer space</option>
+            <option>Cyberpunk city</option>
+            <option>Medieval castle</option>
+            <option>Underwater world</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="section">
+        <label>Ekspresi Wajah</label>
+        <select id="expression">
+          <option value="">-- none --</option>
+          <option>Neutral / Calm</option>
+          <option>Happy / Smiling</option>
+          <option>Laughing / Joyful</option>
+          <option>Sad / Melancholic</option>
+          <option>Crying / Tearful</option>
+          <option>Serious / Stern</option>
+          <option>Thoughtful / Reflective</option>
+          <option>Surprised / Shocked</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <label>Detail tambahan (centang sebanyak yg perlu)</label>
+        <div class="checkboxes">
+          <label><input type="checkbox" class="detail" value="wearing a cap"> Pakai Topi</label>
+          <label><input type="checkbox" class="detail" value="wearing a hijab"> Pakai Hijab</label>
+          <label><input type="checkbox" class="detail" value="wearing a hoodie"> Hoodie</label>
+          <label><input type="checkbox" class="detail" value="wearing casual clothes"> Casual</label>
+          <label><input type="checkbox" class="detail" value="wearing a suit"> Jas Formal</label>
+          <label><input type="checkbox" class="detail" value="wearing fantasy armor"> Armor</label>
+          <label><input type="checkbox" class="detail" value="carrying a bag"> Membawa Tas</label>
+          <label><input type="checkbox" class="detail" value="holding an umbrella"> Membawa Payung</label>
+          <label><input type="checkbox" class="detail" value="smiling"> Senyum</label>
+          <label><input type="checkbox" class="detail" value="serious expression"> Ekspresi Serius</label>
+        </div>
+      </div>
+
+      <div class="section row">
+        <div>
+          <label>Camera Body</label>
+          <select id="camera">
+            <option value="">-- none --</option>
+            <option>Hasselblad H6D</option>
+            <option>Canon EOS R5</option>
+            <option>Sony A7R IV</option>
+            <option>Nikon Z9</option>
+          </select>
+        </div>
+        <div>
+          <label>Lens</label>
+          <select id="lens">
+            <option value="">-- none --</option>
+            <option>85mm f/1.2</option>
+            <option>35mm f/1.4</option>
+            <option>50mm f/1.8</option>
+            <option>70-200mm f/2.8</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <label>Lens Style</label>
+        <select id="lensStyle">
+          <option value="">-- none --</option>
+          <option>Shallow depth of field</option>
+          <option>Cinematic bokeh</option>
+          <option>HDR sharpness</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <label>Lighting Style</label>
+        <select id="lighting">
+          <option value="">-- none --</option>
+          <option>Rembrandt lighting</option>
+          <option>Golden Hour glow</option>
+          <option>Softbox diffusion</option>
+          <option>High-key fashion lighting</option>
+          <option>Neon futuristic light</option>
+          <option>Cinematic backlight</option>
+        </select>
+      </div>
+
+      <div class="section row">
+        <div>
+          <label>Cinematic / Editorial Keywords</label>
+          <select id="keywords">
+            <option value="">-- none --</option>
+            <option>Vogue cover editorial</option>
+            <option>Netflix cinematic grading</option>
+            <option>Hollywood teal & orange</option>
+            <option>Korean drama melancholic tone</option>
+            <option>ESPN action clarity</option>
+            <option>National Geographic vivid tones</option>
+          </select>
+        </div>
+        <div>
+          <label>Photographer Reference</label>
+          <select id="photographer">
+            <option value="">-- none --</option>
+            <option>Annie Leibovitz → celebrity/fashion portrait</option>
+            <option>Peter Lindbergh → B&W editorial</option>
+            <option>Richard Avedon → minimalist fashion</option>
+            <option>Steve McCurry → documentary vivid tones</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <label>Custom tokens (comma separated) — will be appended as-is</label>
+        <input id="customTokens" placeholder="misal: soft film grain, lens flare, rainy weather" />
+      </div>
+
+      <div class="section">
+        <label><input type="checkbox" id="useUploaded"> Use uploaded image of the user</label>
+        <input type="file" id="uploadImage" accept="image/*">
+        <img id="imgPreview" class="imgPreview" style="display:none" alt="preview">
+      </div>
+
+      <div class="section">
+        <div style="display:flex;gap:8px">
+          <input id="presetName" type="text" placeholder="Nama preset untuk disimpan..." />
+          <button id="savePreset" class="smallBtn">Save</button>
+        </div>
+        <div class="presetsList" id="presetsList"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Preview & output -->
+    <div class="panel">
+      <div class="section">
+        <label>Live Prompt Preview</label>
+        <div id="preview" class="previewCard">Pilih opsi di kiri untuk melihat prompt...</div>
+      </div>
+
+      <div class="section">
+        <label>Final Prompt (copy / paste to image model)</label>
+        <textarea id="finalPrompt" rows="6" placeholder="Prompt final akan muncul di sini..."></textarea>
+      </div>
+
+      <div class="section controls">
+        <button id="downloadBtn" class="ghost">⬇️ Download .txt</button>
+        <button id="clearBtn" class="ghost">Clear</button>
+      </div>
+    </div>
+
+    <footer>
+      Build by your bro — Image Generator PRO. Presets disimpan di browser (localStorage).
+    </footer>
+  </div>
+
+<script>
+  // DOM refs
+  const els = {
+    genre: document.getElementById('genre'),
+    style: document.getElementById('style'),
+    preset: document.getElementById('preset'),
+    gender: document.getElementById('gender'),
+    age: document.getElementById('age'),
+    kostum: document.getElementById('kostum'),
+    background: document.getElementById('background'),
+    expression: document.getElementById('expression'),
+    details: () => Array.from(document.querySelectorAll('.detail')),
+    camera: document.getElementById('camera'),
+    lens: document.getElementById('lens'),
+    lensStyle: document.getElementById('lensStyle'),
+    lighting: document.getElementById('lighting'),
+    keywords: document.getElementById('keywords'),
+    photographer: document.getElementById('photographer'),
+    customTokens: document.getElementById('customTokens'),
+    preview: document.getElementById('preview'),
+    finalPrompt: document.getElementById('finalPrompt'),
+    randomBtn: document.getElementById('randomBtn'),
+    copyBtn: document.getElementById('copyBtn'),
+    savePreset: document.getElementById('savePreset'),
+    presetName: document.getElementById('presetName'),
+    presetsList: document.getElementById('presetsList'),
+    downloadBtn: document.getElementById('downloadBtn'),
+    clearBtn: document.getElementById('clearBtn'),
+    useUploaded: document.getElementById('useUploaded'),
+    uploadImage: document.getElementById('uploadImage'),
+    imgPreview: document.getElementById('imgPreview')
+  };
+
+  // listeners
+  document.querySelectorAll('select, input[type="text"], #customTokens').forEach(i=>{
+    i.addEventListener('change', updateAll);
+    i.addEventListener('input', updateAll);
+  });
+
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    cb.addEventListener('change', updateAll);
+  });
+
+  // upload preview
+  els.uploadImage.addEventListener('change', (e)=>{
+    const f = e.target.files[0];
+    if(!f) { els.imgPreview.style.display='none'; updateAll(); return; }
+    const url = URL.createObjectURL(f);
+    els.imgPreview.src = url;
+    els.imgPreview.style.display = 'block';
+    updateAll();
+  });
+
+  function buildPrompt(){
+    const parts = [];
+    const genre = els.genre.value;
+    const style = els.style.value;
+    const preset = els.preset.value;
+    const gender = els.gender.value;
+    const age = els.age.value;
+    const kostum = els.kostum.value;
+    const background = els.background.value;
+    const expression = els.expression.value;
+    const checkedEls = Array.from(document.querySelectorAll('.checkboxes input[type=checkbox]:checked'));
+    const checked = checkedEls.map(d => d.value);
+    const camera = els.camera.value;
+    const lens = els.lens.value;
+    const lensStyle = els.lensStyle.value;
+    const lighting = els.lighting.value;
+    const keywords = els.keywords.value;
+    const photographer = els.photographer.value;
+    const customTokens = els.customTokens.value;
+    const useUploaded = els.useUploaded.checked;
+    // header
+    const header = [];
+    if(genre) header.push(genre);
+    if(style) header.push(style + ' style');
+    if(header.length) parts.push('A ' + header.join(' '));
+
+    // subject descriptor
+    const subj = [];
+    if(gender) subj.push(gender.toLowerCase());
+    if(age) subj.push(age.toLowerCase());
+    if(subj.length) parts.push(subj.join(' '));
+
+    // costume
+    if(kostum) parts.push('wearing ' + kostum.toLowerCase());
+
+    // expression mapping
+    if(expression){
+      const mapping = {
+        'Neutral / Calm':'neutral expression, calm',
+        'Happy / Smiling':'smiling, joyful expression',
+        'Laughing / Joyful':'laughing, joyful',
+        'Sad / Melancholic':'sad, melancholic expression',
+        'Crying / Tearful':'crying, tears streaming',
+        'Serious / Stern':'serious expression, stern',
+        'Thoughtful / Reflective':'thoughtful, reflective gaze',
+        'Surprised / Shocked':'surprised, wide-eyed'
+      };
+      parts.push(mapping[expression] || expression.toLowerCase());
+    }
+
+    // details
+    if(checked.length) parts.push(checked.join(', '));
+
+    // background
+    if(background) parts.push('in ' + background.toLowerCase());
+
+    // preset and camera/lens
+    if(preset) parts.push(preset);
+    if(camera) parts.push('shot on ' + camera);
+    if(lens) parts.push('with ' + lens + ' lens');
+    if(lensStyle) parts.push(lensStyle);
+    if(lighting) parts.push('lighting: ' + lighting);
+    if(keywords) parts.push(keywords);
+    if(photographer) parts.push('in the style of ' + photographer);
+
+    // custom tokens
+    if(customTokens){
+      const toks = customTokens.split(',').map(t=>t.trim()).filter(Boolean);
+      if(toks.length) parts.push(toks.join(', '));
+    }
+
+    // uploaded image token
+    if(useUploaded){
+      parts.unshift('[use uploaded image of the user]');
+    }
+
+    // quality enhancers
+    const quality = [];
+    if((style && /Hyper Realistic|Realistic 3D/i.test(style)) || (genre && /Photorealistic/i.test(genre)) || (preset && /Photorealism/i.test(preset))){
+      quality.push('ultra-detailed','4k','photorealistic','ultra-sharp');
+    }
+    if(preset && /Photorealism/i.test(preset)) quality.push('award-winning, extreme detail');
+
+    let prompt = parts.filter(Boolean).join(', ');
+    if(quality.length) prompt += ', ' + Array.from(new Set(quality)).join(', ');
+    prompt = prompt.replace(/\s+,/g,',').trim();
+    return prompt || 'Describe scene...';
+  }
+
+  function updateAll(){
+    const p = buildPrompt();
+    els.preview.innerText = p;
+    els.finalPrompt.value = p;
+  }
+
+  // copy
+  els.copyBtn.addEventListener('click', async () => {
+    const text = els.finalPrompt.value || els.preview.innerText;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); ta.remove();
+      }
+      alert('Prompt copied to clipboard ✅');
+    } catch(e){ alert('Gagal copy: '+e.message) }
+  });
+
+  // randomizer
+  document.getElementById('randomBtn').addEventListener('click', randomizeAll);
+  function randomizeAll(){
+    function randFrom(sel){
+      const opts = Array.from(sel.options).slice(1);
+      if(!opts.length) return '';
+      const pick = opts[Math.floor(Math.random()*opts.length)];
+      sel.value = pick.value || pick.text;
+    }
+    ['genre','style','preset','gender','age','kostum','background','expression','camera','lens','lensStyle','lighting','keywords','photographer'].forEach(id=>{
+      const s = document.getElementById(id);
+      if(s) randFrom(s);
+    });
+    document.querySelectorAll('.checkboxes input[type=checkbox]').forEach(cb => cb.checked = Math.random() < 0.3);
+    const sampleTokens = ['soft film grain','cinematic backlight','golden hour glow','cinematic bokeh','cinematic grading','high dynamic range'];
+    els.customTokens.value = sampleTokens.sort(()=>0.5-Math.random()).slice(0,2).join(', ');
+    // keep uploaded image checked state as is
+    updateAll();
+  }
+
+  // Presets
+  const PRESET_KEY = 'ig_pro_presets_v2';
+  function loadPresetsFromStorage(){ try{ const raw = localStorage.getItem(PRESET_KEY); return raw?JSON.parse(raw):{} }catch(e){ return {} } }
+  function savePresetsToStorage(obj){ localStorage.setItem(PRESET_KEY, JSON.stringify(obj)) }
+  function renderPresetsList(){
+    const obj = loadPresetsFromStorage();
+    els.presetsList.innerHTML = '';
+    const keys = Object.keys(obj).reverse();
+    if(!keys.length) els.presetsList.innerHTML = '<div style="color:var(--muted);font-size:13px">No saved presets yet.</div>';
+    keys.forEach(k=>{
+      const div = document.createElement('div'); div.className='presetItem';
+      const left = document.createElement('div'); left.style.flex='1'; left.style.marginRight='8px'; left.innerText = k;
+      const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='6px';
+      const loadBtn = document.createElement('button'); loadBtn.className='smallBtn'; loadBtn.innerText='Load';
+      const delBtn = document.createElement('button'); delBtn.className='smallBtn'; delBtn.innerText='Delete';
+      loadBtn.onclick = ()=> { els.finalPrompt.value = obj[k]; els.preview.innerText = obj[k]; alert('Preset loaded'); }
+      delBtn.onclick = ()=> { if(!confirm('Delete preset "'+k+'"?')) return; const all = loadPresetsFromStorage(); delete all[k]; savePresetsToStorage(all); renderPresetsList(); }
+      actions.appendChild(loadBtn); actions.appendChild(delBtn);
+      div.appendChild(left); div.appendChild(actions); els.presetsList.appendChild(div);
+    });
+  }
+
+  document.getElementById('savePreset').addEventListener('click', ()=>{
+    const name = (document.getElementById('presetName').value||'').trim();
+    if(!name){ alert('Masukkan nama preset dulu'); return; }
+    const all = loadPresetsFromStorage();
+    const prompt = buildPrompt();
+    all[name] = prompt;
+    savePresetsToStorage(all);
+    document.getElementById('presetName').value = '';
+    renderPresetsList();
+    alert('Preset saved ✅');
+  });
+
+  // download
+  els.downloadBtn.addEventListener('click', ()=>{
+    const txt = els.finalPrompt.value || els.preview.innerText;
+    const blob = new Blob([txt], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'prompt.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  els.clearBtn.addEventListener('click', ()=>{
+    if(!confirm('Clear all selections?')) return;
+    document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.getElementById('customTokens').value = '';
+    els.uploadImage.value = '';
+    els.imgPreview.style.display = 'none';
+    updateAll();
+  });
+
+  // init
+  renderPresetsList();
+  updateAll();
+
+</script>
+</body>
+</html>
